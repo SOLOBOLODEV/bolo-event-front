@@ -1,9 +1,10 @@
 <template>
   <header>
     <div>
-      <nav>
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
-      </nav>
+      </nav> -->
+      <BoloConnexion />
     </div>
   </header>
 
@@ -13,4 +14,7 @@
 
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import BoloConnexion from "./components/connexion/BoloConnexion.vue";
+
+
 </script>
