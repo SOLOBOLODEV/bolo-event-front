@@ -1,9 +1,10 @@
 <template>
   <header>
     <div>
-      <nav>
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
-      </nav>
+      </nav> -->
+      <!-- <BoloConnexion /> -->
     </div>
   </header>
 
@@ -13,4 +14,15 @@
 
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import { supabase } from "./utils/supabase";
+import { userSessionStore } from "./stores/userSession";
+
+const userSession = userSessionStore();
+
+supabase.auth.onAuthStateChange((event, session) => {
+  userSession.session = session;
+});
+
+
+
 </script>

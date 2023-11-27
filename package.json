@@ -10,6 +10,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.38.5",
     "axios": "^1.6.1",
     "dotenv": "^16.3.1",
     "pinia": "^2.1.7",

@@ -16,7 +16,6 @@ module.exports = {
     "semi": ["error", "always"],
     // Force snake_case for variables
     "camelcase": ["error", { properties: "never" }],
-    // Force CamelCase for functions
-    "func-name": ["error", { "pascalCase": true }],
   }
 };
+
