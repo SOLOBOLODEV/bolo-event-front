@@ -35,7 +35,6 @@ const login = async () => {
     });
     router.push("/dashboard"); // Redirect à dashboard
   } catch (error) {
-    console.error("Login failed:", error);
     // Display error message to user
   }
 };

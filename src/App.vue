@@ -20,9 +20,7 @@ import { userSessionStore } from "./stores/userSession";
 const userSession = userSessionStore();
 
 supabase.auth.onAuthStateChange((event, session) => {
-  console.log("auth state", event, session);
   userSession.session = session;
-
 });
 
 
