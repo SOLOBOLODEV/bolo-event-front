@@ -41,6 +41,7 @@ let email = ref("");
 let password = ref("");
 let confirmPassword = ref("");
 
+
 const validateEmail = (email) => {
   const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
   return regex.test(email.value);
@@ -61,23 +62,24 @@ const register = async () => {
         password: password.value
       }
     );
+    clear();
     toast.success(
       "Un email de confirmation a été envoyé", {
       autoClose: 10000
     });
-    clear();
   } else {
+    clear();
     toast.error("Erreur enregistrement vérifiez bien le mot de passe et votre mail",
-      {
-        autoClose: 5000,
-      });
+    {
+      autoClose: 5000,
+    });
   }
 };
 
 const clear = () => {
-  email = ref("");
-  password = ref("");
-  confirmPassword = ref("");
+  email.value = "";
+  password.value = "";
+  confirmPassword.value = "";
 };
 
 </script>
