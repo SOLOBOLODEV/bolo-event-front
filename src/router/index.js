@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import { userSessionStore } from "../stores/userSession";
 import DashboardView from "../views/DashboardView.vue";
+import EventView from"../views/EvenView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,12 @@ const router = createRouter({
       meta: {
         needsAuth: true
       }
+    },
+    {
+      path:"/events",
+      name:"events",
+      component: EventView
+
     }
   ]
 });
