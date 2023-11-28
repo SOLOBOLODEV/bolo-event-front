@@ -1,10 +1,7 @@
 <template>
   <header>
     <div>
-      <!-- <nav>
-        <RouterLink to="/">Home</RouterLink>
-      </nav> -->
-      <!-- <BoloConnexion /> -->
+      <button @click="testNotify()">Test</button>
     </div>
   </header>
 
@@ -16,6 +13,8 @@
 import { RouterLink, RouterView } from "vue-router";
 import { supabase } from "./utils/supabase";
 import { userSessionStore } from "./stores/userSession";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const userSession = userSessionStore();
 
