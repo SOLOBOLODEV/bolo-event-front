@@ -14,7 +14,7 @@
         <div class="hidden md:flex space-x-4">
           <RouterLink class="nav-link" to="/dashboard">Accueil</RouterLink>
           <RouterLink class="nav-link" to="">Évenement</RouterLink>
-          <RouterLink class="nav-link" to="/swag">Swag</RouterLink>
+          <RouterLink class="nav-link" to="">Swag</RouterLink>
           <button class="nav-link" @click="logout()"> Déconnexion </button>
         </div>
       </div>  
