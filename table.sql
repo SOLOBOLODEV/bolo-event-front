@@ -38,5 +38,5 @@ CREATE TABLE Feedbacks (
 create table participation(
     participation_id SERIAL PRIMARY KEY,    
     user_id INT REFERENCES Utilisateurs(user_id),
-    event_id INT REFERENCES Evenements(event_id),
+    event_id INT REFERENCES Evenements(event_id)
     );
