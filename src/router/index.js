@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import { userSessionStore } from "../stores/userSession";
 import DashboardView from "../views/DashboardView.vue";
+import SwagView from "../views/SwagView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +18,15 @@ const router = createRouter({
       component: DashboardView, 
       meta: {
         needsAuth: true
-      }
+      },
+    },
+    {
+      path: "/swag",
+      name: "swag",
+      component: SwagView,
+      meta: {
+        needsAuth: true
+      },
     }
   ]
 });
