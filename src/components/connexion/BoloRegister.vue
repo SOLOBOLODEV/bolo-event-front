@@ -1,6 +1,10 @@
 <template>
   <div>
-    <p></p>
+    <ul class="text-slate-400">
+      <li>Le mot de passe doit être de 8 caractères</li>
+      <li>1 lettre minuscule et 1 lettre majuscule</li>
+      <li>1 chiffre, et 1 caractère spécial</li>
+    </ul>
   </div>
   <div>
     <label class="block py-1">Mail</label>
@@ -30,11 +34,12 @@
 <script setup>
 import { ref } from "vue";
 import { supabase } from "../../utils/supabase";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
-
-const email = ref("");
-const password = ref("");
-const confirmPassword = ref("");
+let email = ref("");
+let password = ref("");
+let confirmPassword = ref("");
 
 const validateEmail = (email) => {
   const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -56,7 +61,23 @@ const register = async () => {
         password: password.value
       }
     );
+    toast.success(
+      "Un email de confirmation a été envoyé", {
+      autoClose: 10000
+    });
+    clear();
+  } else {
+    toast.error("Erreur enregistrement vérifiez bien le mot de passe et votre mail",
+      {
+        autoClose: 5000,
+      });
   }
+};
+
+const clear = () => {
+  email = ref("");
+  password = ref("");
+  confirmPassword = ref("");
 };
 
 </script>

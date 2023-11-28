@@ -21,6 +21,8 @@
 import { supabase } from "../../utils/supabase";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const router = useRouter();
 const email = ref("");
@@ -35,6 +37,10 @@ const login = async () => {
     });
     router.push("/dashboard"); // Redirect à dashboard
   } catch (error) {
+    toast.error("Connexion échouée", {
+      autoClose: 5000,
+    });
+
     // Display error message to user
   }
 };

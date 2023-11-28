@@ -21,7 +21,6 @@ const userSession = userSessionStore();
 
 supabase.auth.onAuthStateChange((event, session) => {
   userSession.session = session;
-  console.log("caca", userSession.session);
 });
 
 
