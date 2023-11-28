@@ -1,7 +1,9 @@
 <template>
   <header>
     <div>
-      <button @click="testNotify()">Test</button>
+        <!-- <RouterLink to="/">Home</RouterLink> -->
+        <BoloNavbar v-if="userSession.session" />
+      <!-- <BoloConnexion /> -->
     </div>
   </header>
 
@@ -13,8 +15,7 @@
 import { RouterLink, RouterView } from "vue-router";
 import { supabase } from "./utils/supabase";
 import { userSessionStore } from "./stores/userSession";
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
+import BoloNavbar from "./components/nav/BoloNavbar.vue";
 
 const userSession = userSessionStore();
 

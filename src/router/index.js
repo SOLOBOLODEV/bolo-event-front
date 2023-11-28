@@ -17,8 +17,8 @@ const router = createRouter({
       component: DashboardView, 
       meta: {
         needsAuth: true
-      }
-    }
+      },
+    },
   ]
 });
 
