@@ -29,7 +29,7 @@
   
 <script setup>
 import { useDataEventStore } from "../stores/dataEvent";
-import BoloDataTable from "../components/BoloDataTable.vue";
+
 import { ref } from "vue";
 
 const store = useDataEventStore();

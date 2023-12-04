@@ -17,6 +17,22 @@ export const useDataEventStore = defineStore({
       } catch(error) {
         console.error(error);
       }
+    },
+    
+    async createEvent(arg, id) {
+      try {
+        await supabase.from("evenements").insert(
+          {
+            titre: arg.title, 
+            description: arg.description,
+            date: arg.date,
+            type_evenement: arg.eventType,
+            organisateur_id: id
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 });
