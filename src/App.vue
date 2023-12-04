@@ -2,8 +2,6 @@
   <header>
     <div v-if="userSession.session">
       <BoloNavbar />
-      <BoloJoin />
-      <BoloCreate />
     </div>
   </header>
 
