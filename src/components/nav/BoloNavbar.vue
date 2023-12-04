@@ -3,21 +3,17 @@
     <div class="container mx-auto flex items-center justify-between p-4">
       <div class="flex items-center space-x-4">
         <a class="navbar-brand">
-          <img
-            src="SBD.svg"
-            alt="LOGO"
-            class="h-22 w-22"
-          />
+          <img src="SBD.svg" alt="LOGO" class="h-22 w-22" />
         </a>
       </div>
       <div class="flex items-center space-x-4">
         <div class="hidden md:flex space-x-4">
-          <RouterLink class="nav-link" to="/dashboard">Accueil</RouterLink>
-          <RouterLink class="nav-link" to="">Évenement</RouterLink>
-          <RouterLink class="nav-link" to="">Swag</RouterLink>
-          <button class="nav-link" @click="logout()"> Déconnexion </button>
+          <RouterLink to="/dashboard">Accueil</RouterLink>
+          <RouterLink to="">Évenement</RouterLink>
+          <RouterLink to="">Swag</RouterLink>
+          <button @click="logout()"> Déconnexion </button>
         </div>
-      </div>  
+      </div>
     </div>
   </nav>
 </template>

@@ -1,16 +1,11 @@
 <template>
-  <header>
-    <div v-if="userSession.session">
-      <BoloNavbar />
-    </div>
-  </header>
-
+  <BoloNavbar v-if="userSession.session" />
   <RouterView />
 </template>
 
 
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterView } from "vue-router";
 import { supabase } from "./utils/supabase";
 import { userSessionStore } from "./stores/userSession";
 import BoloNavbar from "./components/nav/BoloNavbar.vue";
