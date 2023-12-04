@@ -39,6 +39,8 @@ const dataEvent = reactive({
   date: "",
   eventType: ""
 });
+
+
 const userSession = userSessionStore();
 const dataStore = useDataEventStore();
 const userId = userSession.getUserId;
