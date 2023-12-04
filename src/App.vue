@@ -14,8 +14,7 @@ import { RouterLink, RouterView } from "vue-router";
 import { supabase } from "./utils/supabase";
 import { userSessionStore } from "./stores/userSession";
 import BoloNavbar from "./components/nav/BoloNavbar.vue";
-import BoloJoin from "./components/dialog/BoloJoin.vue";
-import BoloCreate from "./components/dialog/BoloCreate.vue";
+
 
 const userSession = userSessionStore();
 
