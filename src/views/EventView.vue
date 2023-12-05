@@ -3,13 +3,6 @@
     <h1>Events</h1>
     <button @click="syncEvent()">test</button>
 
-    <!-- <BoloDataTable :data="evenements" :columns="columns" /> -->
-
-
-    <!-- <ul v-for="event in evenements" :key="event">
-      {{ event.titre }}
-    </ul> -->
-
     <table>
       <tr>
         <td v-for="column in columns" :key="column">
@@ -47,8 +40,5 @@ const syncEvent = async () => {
   evenements.value = store.events;
   console.log(evenements.value);
 };
-
-// { "event_id": 1, "titre": "Rocket league tournoi", "description": "Tournoi Rocket league ", "date": "2023-05-20", "lieu": "Paris", "type_evenement": "tournoi", "organisateur_id": null }
-
 
 </script>

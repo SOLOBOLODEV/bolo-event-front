@@ -7,6 +7,19 @@ export const useDataEventStore = defineStore({
     events: null
   }),
 
+  getters: {
+    getMyEvents(id) {
+      const response = this.events.map(event => {
+        let res = [];
+        if (event.organisateur_id === id) {
+          res.push(event);
+        }
+        return res;
+      });
+      return response;
+    },
+  },
+
   actions: {
     async loadEventData() {
       try {
@@ -33,6 +46,16 @@ export const useDataEventStore = defineStore({
       } catch (error) {
         console.error(error);
       }
-    }
+    },
+
+    async deleteEvent(id) {
+      try{
+        await supabase.from("evenements").delete().eq("event_id", id);
+      }
+      catch (error) {
+        console.error(error);
+      }
+    } 
+
   }
 });
