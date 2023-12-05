@@ -9,7 +9,7 @@
       <div class="flex items-center space-x-4">
         <div class="hidden md:flex space-x-4">
           <RouterLink to="/dashboard">Accueil</RouterLink>
-          <RouterLink to="">Évenement</RouterLink>
+          <RouterLink to="/events">Évenement</RouterLink>
           <RouterLink to="">Swag</RouterLink>
           <button @click="logout()"> Déconnexion </button>
         </div>
@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-
 import { supabase } from "../../utils/supabase";
 
 

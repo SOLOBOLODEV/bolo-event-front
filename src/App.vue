@@ -17,6 +17,4 @@ supabase.auth.onAuthStateChange((event, session) => {
   userSession.session = session;
 });
 
-
-
 </script>
