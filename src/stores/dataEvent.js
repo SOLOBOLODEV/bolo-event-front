@@ -7,19 +7,6 @@ export const useDataEventStore = defineStore({
     events: null
   }),
 
-  getters: {
-    getMyEvents(id) {
-      const response = this.events.map(event => {
-        let res = [];
-        if (event.organisateur_id === id) {
-          res.push(event);
-        }
-        return res;
-      });
-      return response;
-    },
-  },
-
   actions: {
     async loadEventData() {
       try {
@@ -48,9 +35,13 @@ export const useDataEventStore = defineStore({
       }
     },
 
-    async deleteEvent(id) {
+    async deleteEvent(id, uID) {
       try{
-        await supabase.from("evenements").delete().eq("event_id", id);
+        await supabase.from("evenements")
+        .delete()
+        .eq("organisateur_id", uID)
+        .eq("event_id", id);
+        console.log("caca");
       }
       catch (error) {
         console.error(error);

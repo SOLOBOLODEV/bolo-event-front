@@ -3,9 +3,12 @@
     <h1>Dashboard</h1>
 
     <div>
-      {{ myEvents }}
+      <li v-for="event in myEvents" :key="event">
+        {{ event }}
+        <button @click="deleteEvent(event.event_id)">Supprimer</button>
+      </li>
+      {{ userId }}
     </div>
-
   </div>
 </template>
 
@@ -18,19 +21,24 @@ import { ref } from "vue";
 const userSession = userSessionStore();
 const dataEvent = useDataEventStore();
 const myEvents = ref([]);
+const userId = userSession.getUserId;
 
 const displayMyEvent = async () => {
   await dataEvent.loadEventData();
   myEvents.value = dataEvent.events;
-  myEvents.value.map(event => {
-    let res = [];
-    if (event.organisateur_id === userSession.getUserId) {
-      res.push(event);
-    }
-    return res;
-  });
+  const eventList = myEvents.value.filter(event => event.organisateur_id === userId);
+  myEvents.value = eventList;
 };
+
+const deleteEvent = async (id) => {
+  console.log(id);
+  const userId = await userSession.getUserId;
+  console.log(userId);
+  await dataEvent.deleteEvent(id, userId);
+};
+
 displayMyEvent();
+
 
 
 const logout = async () => {
