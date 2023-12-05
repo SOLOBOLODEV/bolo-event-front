@@ -14,6 +14,7 @@
             <p>a {{ event.lieu }} le {{ event.date }}</p>
             <input v-model="feedbackText" type="text" placeholder="Feedback" class="h-15 mt-3" /> <!-- Utilisation de mt-4 pour ajouter un espacement en haut -->
             <button @click="submitFeedback" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Envoyer le Feedback</button>
+            <button @click="join(eventId)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
             <button @click="togglePopup" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
 
           </div>
@@ -65,6 +66,22 @@ const showPopup = ref(false);
 const eventId = ref("");
 const feedbackText = ref("");
 const userSession = userSessionStore();
+
+const join = async (eventId) => {
+  console.log(eventId);
+  const { data, error } = await supabase.from("participation").upsert([
+      {
+        event_id: eventId,
+        user_id: userSession.session.user.id,
+      },
+    ]);
+    console.log("data ; ", data, "\nError : ", error);
+    if (error) {
+      console.error("Erreur lors de la partitipation a l'event:", error);
+    } else {
+      console.log("Event rejoin avec succès !");
+    }
+};
 
 const submitFeedback = async () => {
   // Vérifier si le contenu du feedback n'est pas vide
