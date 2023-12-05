@@ -1,18 +1,21 @@
 <template>
   <div>
-    <h1>Dashboard</h1>
     <div
       style="display: flex; align-items: center; justify-content: center; z-index: 200; bottom: 0; position: absolute; width: 100%; height: 100%; background-color: hsla(0, 0%, 50%, 25%); backdrop-filter: blur(1px);"
       v-if="showPopup">
       <div
         style="position: relative; width: 80%; aspect-ratio: 16/9; background-color: hsl(0, 0%, 80%); border-radius: 16px; box-shadow: 5px 5px 20px hsl(0, 0%, 20%);">
         <div v-for="event in myEvents" :key="event">
-          <div v-if="event.event_id == eventId">
-            <h2>{{ event.titre }}</h2>
-            <p>type : {{ event.type_evenement }}</p>
-            <p>{{ event.description }}</p>
-            <p>a {{ event.lieu }} le {{ event.date }}</p>
-            <button @click="togglePopup(event.event_id)">caca</button>
+          <div v-if="event.event_id == eventId" class="w-full mx-auto py-16">
+            <input type="text" v-model="event.titre" class="mb-4 p-2 border border-gray-300 block w-1/2 bg-teal-500" />
+            <input type="text" v-model="event.type_evenement"
+              class="mb-4 p-2 border border-gray-300 block w-1/2 bg-orange-600" />
+            <input type="text" v-model="event.lieu" class="mb-4 p-2 border border-gray-300 block w-1/2 bg-red-500" />
+            <input type="date" v-model="event.date" class="mb-4 p-2 border border-gray-300 block w-1/2 bg-green-500" />
+            <textarea v-model="event.description"
+              class="mb-4 p-2 border border-gray-300 block w-1/2 h-60 bg-fuchsia-600" />
+            <button class="bg-red-500 rounded-sm p-4" @click="togglePopup(event.event_id)">Quitter</button>
+            <button class="bg-green-600 rounded-sm p-4 ml-32" @click="updateEvent(event)">Sauvegarder</button>
           </div>
         </div>
       </div>
@@ -58,6 +61,8 @@ import { userSessionStore } from "../stores/userSession";
 import { useDataEventStore } from "../stores/dataEvent";
 import { supabase } from "../utils/supabase";
 import { ref } from "vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const store = useDataEventStore();
 const evenements = ref([]);
@@ -93,11 +98,18 @@ const displayMyEvent = async () => {
 };
 
 const deleteEvent = async (id) => {
-  console.log(id);
   const userId = await userSession.getUserId;
-  console.log(userId);
   await dataEvent.deleteEvent(id, userId);
 };
+
+const updateEvent = async (event) => {
+  console.log(event);
+  await dataEvent.updateEvent(event, userId);
+  toast.success("Modifications enregistrés", {
+    autoClose: 10000
+  });
+};
+
 
 displayMyEvent();
 
