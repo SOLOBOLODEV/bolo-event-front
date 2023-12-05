@@ -17,7 +17,10 @@
             <p>type : {{ event.type_evenement }}</p>
             <p>{{ event.description }}</p>
             <p>a {{ event.lieu }} le {{ event.date }}</p>
-            <button @click="togglePopup(event.event_id)">caca</button>
+            <input v-model="feedbackText" type="text" placeholder="Feedback" class="h-15 mt-3" /> <!-- Utilisation de mt-4 pour ajouter un espacement en haut -->
+            <button @click="submitFeedback" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Envoyer le Feedback</button>
+            <button @click="togglePopup" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
+
           </div>
         </div>
       </div>
@@ -25,7 +28,7 @@
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead class="text-xs uppercase bg-gray-700 text-gray-400">
           <tr>
             <th v-for="column in columns" :key="column" scope="col" class="px-6 py-3">
               {{ column.label }}
@@ -54,14 +57,39 @@
   
 <script setup>
 import { useDataEventStore } from "../stores/dataEvent";
-
+import { supabase } from "../utils/supabase";
 import { ref } from "vue";
+import { userSessionStore } from "../stores/userSession";
 
 const store = useDataEventStore();
 
 const evenements = ref([]);
 const showPopup = ref(false);
 const eventId = ref("");
+const feedbackText = ref("");
+const userSession = userSessionStore();
+
+const submitFeedback = async () => {
+  // Vérifier si le contenu du feedback n'est pas vide
+  if (feedbackText.value.trim() !== "") {
+    // Envoyer le contenu du feedback à la table "feedback"
+    const { data, error } = await supabase.from("feedbacks").upsert([
+      {
+        event_id: eventId.value,
+        commentaire: feedbackText.value,
+        user_id: userSession.session.user.id,
+      },
+    ]);
+      console.log(data);
+    if (error) {
+      console.error("Erreur lors de l'envoi du feedback:", error);
+    } else {
+      console.log("Feedback envoyé avec succès !");
+      // Réinitialiser le contenu de l'input après l'envoi
+      feedbackText.value = "";
+    }
+  }
+};
 
 const columns = [
   { name: "titre", label: "Titre" },
