@@ -32,6 +32,35 @@ export const useDataEventStore = defineStore({
       }
     },
 
+    async joinEvent(eventId, userId) {
+      console.log(eventId);
+      const { data, error } = await supabase.from("participation").upsert([
+          {
+            event_id: eventId,
+            user_id: userId
+          },
+        ]);
+        console.log("data ; ", data, "\nError : ", error);
+        if (error) {
+          console.error("Erreur lors de la partitipation a l'event:", error);
+        } else {
+          console.log("Event rejoin avec succès !");
+        }
+    },
+
+    async leaveEvent(eventId, userId) {
+      try{
+        await supabase.from("participation")
+        .delete()
+        .eq("user_id", userId)
+        .eq("event_id", eventId);
+        console.log("caca");
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+
     async loadEventData() {
       try {
         const { data, error } = await supabase
