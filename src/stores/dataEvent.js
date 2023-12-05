@@ -8,6 +8,30 @@ export const useDataEventStore = defineStore({
   }),
 
   actions: {
+    async getUserEvents(userId) {
+      try {
+        const { data, error } = await supabase
+          .from("participation")
+          .select("*")
+          .eq("user_id", userId);
+        this.events = data; 
+      } catch(error) {
+        console.error(error);
+      }
+    },
+
+    async getEvent(eventId) {
+      try {
+        const { data, error } = await supabase
+          .from("evenements")
+          .select("*")
+          .eq("event_id", eventId);
+        this.events = data; 
+      } catch(error) {
+        console.error(error);
+      }
+    },
+
     async loadEventData() {
       try {
         const { data, error } = await supabase
