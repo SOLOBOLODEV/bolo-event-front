@@ -1,16 +1,11 @@
 <template>
   <div>
     <h1>Events</h1>
-    <button @click="syncEvent()">test</button>
-
-    <!-- <BoloDataTable :data="evenements" :columns="columns" /> -->
-
-
-    <!-- <ul v-for="event in evenements" :key="event">
-      {{ event.titre }}
-    </ul> -->
-    <div style="display: flex; align-items: center; justify-content: center; z-index: 200; bottom: 0; position: absolute; width: 100%; height: 100%; background-color: hsla(0, 0%, 50%, 25%); backdrop-filter: blur(1px);" v-if="showPopup">
-      <div style="position: relative; width: 80%; aspect-ratio: 16/9; background-color: hsl(0, 0%, 80%); border-radius: 16px; box-shadow: 5px 5px 20px hsl(0, 0%, 20%);">
+    <div
+      style="display: flex; align-items: center; justify-content: center; z-index: 200; bottom: 0; position: absolute; width: 100%; height: 100%; background-color: hsla(0, 0%, 50%, 25%); backdrop-filter: blur(1px);"
+      v-if="showPopup">
+      <div
+        style="position: relative; width: 80%; aspect-ratio: 16/9; background-color: hsl(0, 0%, 80%); border-radius: 16px; box-shadow: 5px 5px 20px hsl(0, 0%, 20%);">
         <div v-for="event in evenements" :key="event">
           <div v-if="event.event_id == eventId">
             <h2>{{ event.titre }}</h2>
@@ -41,10 +36,12 @@
         <tbody>
           <!-- Séparer les 2 lignes en composants différents -->
           <tr v-for="event in evenements" :key="event" class="odd:bg-gray-200 even:bg-gray-50 border-b">
-            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ event.titre != null ? event.titre : "non précisé"}}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.lieu != null ? event.lieu : "non précisé"}}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.date != null ? event.date : "non précisé"}}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.type_evenement != null ? event.type_evenement : "non précisé"}}</td>
+            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ event.titre != null ?
+              event.titre : "non précisé" }}</td>
+            <td class="px-6 py-4 text-gray-800">{{ event.lieu != null ? event.lieu : "non précisé" }}</td>
+            <td class="px-6 py-4 text-gray-800">{{ event.date != null ? event.date : "non précisé" }}</td>
+            <td class="px-6 py-4 text-gray-800">{{ event.type_evenement != null ? event.type_evenement : "non précisé" }}
+            </td>
             <td><button @click="togglePopup(event.event_id)">caca</button></td>
             <!-- {{ event }} -->
           </tr>
@@ -106,10 +103,7 @@ const togglePopup = (toggledEventId) => {
 const syncEvent = async () => {
   await store.loadEventData();
   evenements.value = store.events;
-  console.log(evenements.value);
 };
-
-// { "event_id": 1, "titre": "Rocket league tournoi", "description": "Tournoi Rocket league ", "date": "2023-05-20", "lieu": "Paris", "type_evenement": "tournoi", "organisateur_id": null }
 
 //Display table on load
 syncEvent();

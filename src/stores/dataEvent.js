@@ -33,6 +33,20 @@ export const useDataEventStore = defineStore({
       } catch (error) {
         console.error(error);
       }
-    }
+    },
+
+    async deleteEvent(id, uID) {
+      try{
+        await supabase.from("evenements")
+        .delete()
+        .eq("organisateur_id", uID)
+        .eq("event_id", id);
+        console.log("caca");
+      }
+      catch (error) {
+        console.error(error);
+      }
+    } 
+
   }
 });
