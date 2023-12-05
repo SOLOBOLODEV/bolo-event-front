@@ -16,6 +16,11 @@
         class="border w-full py-2 px-2 rounded shadow hover:border-indigo-600 ring-1 ring-inset ring-gray-300 font-mono">
     </div>
     <div>
+      <label class="block py-1">Lieu</label>
+      <input type="text" v-model="dataEvent.lieu"
+        class="border w-full py-2 px-2 rounded shadow hover:border-indigo-600 ring-1 ring-inset ring-gray-300 font-mono">
+    </div>
+    <div>
       <label class="block py-1">Type d'événements</label>
       <input type="text" v-model="dataEvent.eventType"
         class="border w-full py-2 px-2 rounded shadow hover:border-indigo-600 ring-1 ring-inset ring-gray-300 font-mono">
@@ -37,7 +42,8 @@ const dataEvent = reactive({
   title: "",
   description: "",
   date: "",
-  eventType: ""
+  eventType: "",
+  lieu: ""
 });
 
 
