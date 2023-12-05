@@ -12,7 +12,13 @@
             <p>type : {{ event.type_evenement }}</p>
             <p>{{ event.description }}</p>
             <p>a {{ event.lieu }} le {{ event.date }}</p>
-            <button @click="togglePopup(event.event_id)">caca</button>
+            
+            <h3>Commentaires :</h3>
+          <ul v-if="event.comments && event.comments.length">
+            <li v-for="comment in event.comments" :key="comment.id">{{ comment.commentaire }}</li>
+          </ul>
+          <p v-else>Pas de commentaires.</p>
+            <button @click="togglePopup(event.event_id)">Retour</button>
           </div>
         </div>
       </div>
@@ -28,28 +34,19 @@
             <th>
               En savoir plus
             </th>
-            <th>
-
-            </th>
           </tr>
         </thead>
         <tbody>
-          <!-- Séparer les 2 lignes en composants différents -->
           <tr v-for="event in myEvents" :key="event" class="odd:bg-gray-200 even:bg-gray-50 border-b">
             <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ event.titre != null ?
               event.titre : "non précisé" }}</td>
             <td class="px-6 py-4 text-gray-800">{{ event.lieu != null ? event.lieu : "non précisé" }}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.date != null ? event.date : "non précisé" }}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.type_evenement != null ? event.type_evenement : "non précisé" }}
-            </td>
-            <td><button @click="togglePopup(event.event_id)">Cliquez</button></td>
+            <td><button @click="togglePopup(event.event_id)">Plus</button></td>
             <td><button @click="deleteEvent(event.event_id)">Supprimer</button></td>
-            <!-- {{ event }} -->
           </tr>
         </tbody>
       </table>
     </div>
-
   </div>
 </template>
 
@@ -70,8 +67,6 @@ const userId = userSession.getUserId;
 const columns = [
   { name: "titre", label: "Vos Evennements" },
   { name: "lieu", label: "Lieu" },
-  { name: "date", label: "Date" },
-  { name: "type_evenement", label: "Type" }
 ];
 
 const togglePopup = (toggledEventId) => {
@@ -90,7 +85,23 @@ const displayMyEvent = async () => {
   myEvents.value = dataEvent.events;
   const eventList = myEvents.value.filter(event => event.organisateur_id === userId);
   myEvents.value = eventList;
+
+  // Parcourir tous les événements pour récupérer les commentaires
+  for (const event of myEvents.value) {
+    const { data, error } = await supabase
+      .from("feedbacks")
+      .select("commentaire")
+      .eq("event_id", event.event_id);
+
+    if (error) {
+      console.error("Erreur lors de la récupération des commentaires depuis Supabase:", error);
+    } else {
+      event.comments = data;
+    }
+  }
 };
+
+displayMyEvent();
 
 const deleteEvent = async (id) => {
   console.log(id);
@@ -99,10 +110,6 @@ const deleteEvent = async (id) => {
   await dataEvent.deleteEvent(id, userId);
 };
 
-displayMyEvent();
-
-
-
 const logout = async () => {
   try {
     await supabase.auth.signOut();
@@ -110,5 +117,4 @@ const logout = async () => {
     console.error(error);
   }
 };
-
 </script>
