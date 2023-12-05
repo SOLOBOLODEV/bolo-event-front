@@ -19,10 +19,9 @@
 </template>
 
 <script setup>
-import { userSessionStore } from "../../stores/userSession";
+
 import { supabase } from "../../utils/supabase";
 
-const userSession = userSessionStore();
 
 const logout = async () => {
   try {
