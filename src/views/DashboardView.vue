@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Dashboard</h1>
     <div
       style="display: flex; align-items: center; justify-content: center; z-index: 200; bottom: 0; position: absolute; width: 100%; height: 100%; background-color: hsla(0, 0%, 50%, 25%); backdrop-filter: blur(1px);"
       v-if="showPopup">
@@ -55,6 +54,8 @@ import { userSessionStore } from "../stores/userSession";
 import { useDataEventStore } from "../stores/dataEvent";
 import { supabase } from "../utils/supabase";
 import { ref } from "vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const store = useDataEventStore();
 const evenements = ref([]);
@@ -104,11 +105,20 @@ const displayMyEvent = async () => {
 displayMyEvent();
 
 const deleteEvent = async (id) => {
-  console.log(id);
   const userId = await userSession.getUserId;
-  console.log(userId);
   await dataEvent.deleteEvent(id, userId);
 };
+
+const updateEvent = async (event) => {
+  console.log(event);
+  await dataEvent.updateEvent(event, userId);
+  toast.success("Modifications enregistrés", {
+    autoClose: 10000
+  });
+};
+
+
+displayMyEvent();
 
 const logout = async () => {
   try {

@@ -8,6 +8,59 @@ export const useDataEventStore = defineStore({
   }),
 
   actions: {
+    async getUserEvents(userId) {
+      try {
+        const { data, error } = await supabase
+          .from("participation")
+          .select("*")
+          .eq("user_id", userId);
+        this.events = data; 
+      } catch(error) {
+        console.error(error);
+      }
+    },
+
+    async getEvent(eventId) {
+      try {
+        const { data, error } = await supabase
+          .from("evenements")
+          .select("*")
+          .eq("event_id", eventId);
+        this.events = data; 
+      } catch(error) {
+        console.error(error);
+      }
+    },
+
+    async joinEvent(eventId, userId) {
+      console.log(eventId);
+      const { data, error } = await supabase.from("participation").upsert([
+          {
+            event_id: eventId,
+            user_id: userId
+          },
+        ]);
+        console.log("data ; ", data, "\nError : ", error);
+        if (error) {
+          console.error("Erreur lors de la partitipation a l'event:", error);
+        } else {
+          console.log("Event rejoin avec succès !");
+        }
+    },
+
+    async leaveEvent(eventId, userId) {
+      try{
+        await supabase.from("participation")
+        .delete()
+        .eq("user_id", userId)
+        .eq("event_id", eventId);
+        console.log("caca");
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+
     async loadEventData() {
       try {
         const { data, error } = await supabase
@@ -27,7 +80,9 @@ export const useDataEventStore = defineStore({
             description: arg.description,
             date: arg.date,
             type_evenement: arg.eventType,
-            organisateur_id: id
+            lieu: arg.lieu,
+            organisateur_id: id,
+
           }
         );
       } catch (error) {
@@ -46,7 +101,27 @@ export const useDataEventStore = defineStore({
       catch (error) {
         console.error(error);
       }
-    } 
+    },
+
+    async updateEvent(arg, uId) {
+      try {
+        console.log("caca", arg);
+        console.log(uId);
+        await supabase.from("evenements")
+        .update({
+          titre: arg.titre,
+          description: arg.description,
+          lieu: arg.lieu,
+          type_evenement: arg.type_evenement,
+          date: arg.date
+        })
+        .eq("event_id", arg.event_id);
+
+      } 
+      catch(error) {
+        console.error(error);
+      }
+    }
 
   }
 });
