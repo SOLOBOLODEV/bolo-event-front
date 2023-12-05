@@ -68,19 +68,7 @@ const feedbackText = ref("");
 const userSession = userSessionStore();
 
 const join = async (eventId) => {
-  console.log(eventId);
-  const { data, error } = await supabase.from("participation").upsert([
-      {
-        event_id: eventId,
-        user_id: userSession.session.user.id,
-      },
-    ]);
-    console.log("data ; ", data, "\nError : ", error);
-    if (error) {
-      console.error("Erreur lors de la partitipation a l'event:", error);
-    } else {
-      console.log("Event rejoin avec succès !");
-    }
+  store.joinEvent(eventId, userSession.session.user.id);
 };
 
 const submitFeedback = async () => {
