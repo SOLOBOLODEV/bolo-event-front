@@ -8,7 +8,7 @@
         <div class="hidden md:flex space-x-4">
           <RouterLink to="/dashboard">Accueil</RouterLink>
           <RouterLink to="/events">Évenement</RouterLink>
-          <RouterLink to="/create-event">Create Events</RouterLink>
+          <RouterLink to="/create-event">Create events</RouterLink>
           <button @click="logout()"> Déconnexion </button>
         </div>
         <!-- Ajout d'un bouton pour le menu sur les écrans de taille inférieure à md -->
@@ -24,7 +24,7 @@
       <div v-if="showMobileMenu" class="md:hidden absolute top-16 right-0 bg-white border border-gray-200 p-4 space-y-2">
         <RouterLink to="/dashboard" @click="toggleMobileMenu">Accueil</RouterLink>
         <RouterLink to="/events" @click="toggleMobileMenu">Évenement</RouterLink>
-        <RouterLink to="" @click="toggleMobileMenu">Swag</RouterLink>
+        <RouterLink to="/create-event" @click="toggleMobileMenu">Créer Évenement</RouterLink>
         <button @click="logout(); toggleMobileMenu()"> Déconnexion </button>
       </div>
     </div>
