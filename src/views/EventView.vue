@@ -1,6 +1,9 @@
 <template>
   <div>
     <h1>Events</h1>
+    <div class="hidden md:flex space-x-4">
+          <RouterLink to="/create-event">Create Event</RouterLink>
+    </div>
     <div
       style="display: flex; align-items: center; justify-content: center; z-index: 200; bottom: 0; position: absolute; width: 100%; height: 100%; background-color: hsla(0, 0%, 50%, 25%); backdrop-filter: blur(1px);"
       v-if="showPopup">
