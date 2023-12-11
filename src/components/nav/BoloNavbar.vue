@@ -2,9 +2,7 @@
   <nav class="navbar flex top-0 w-full bg-white border-b border-gray-200 relative z-10">
     <div class="container mx-auto flex items-center justify-between p-4">
       <div class="flex items-center space-x-4">
-        <a class="navbar-brand">
-          <img src="SBD.svg" alt="LOGO" class="h-22 w-22" />
-        </a>
+        <SbdLogo />
       </div>
       <div class="flex items-center space-x-4">
         <div class="hidden md:flex space-x-4">
@@ -37,6 +35,7 @@
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { supabase } from "../../utils/supabase";
+import SbdLogo from "../icons/SbdLogo.vue";
 
 const showMobileMenu = ref(false);
 
