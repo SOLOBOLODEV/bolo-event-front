@@ -75,9 +75,7 @@ const leave = async (eventId) => {
 };
 
 const submitFeedback = async () => {
-  // Vérifier si le contenu du feedback n'est pas vide
     if (feedbackText.value.trim() !== "") {
-    // Envoyer le contenu du feedback à la table "feedback"
         const { data, error } = await supabase.from("feedbacks").upsert([
             {
             event_id: eventId.value,
@@ -90,7 +88,6 @@ const submitFeedback = async () => {
             console.error("Erreur lors de l'envoi du feedback:", error);
         } else {
             console.log("Feedback envoyé avec succès !");
-            // Réinitialiser le contenu de l'input après l'envoi
             feedbackText.value = "";
         }
     }
