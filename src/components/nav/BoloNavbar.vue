@@ -8,7 +8,7 @@
         <div class="hidden md:flex space-x-4">
           <RouterLink to="/dashboard">Accueil</RouterLink>
           <RouterLink to="/events">Évenement</RouterLink>
-          <RouterLink to="">Swag</RouterLink>
+          <RouterLink to="/create-event">Create Events</RouterLink>
           <button @click="logout()"> Déconnexion </button>
         </div>
         <!-- Ajout d'un bouton pour le menu sur les écrans de taille inférieure à md -->
