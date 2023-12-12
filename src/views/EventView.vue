@@ -75,7 +75,7 @@ const userSession = userSessionStore();
 
 const join = async (eventId) => {
   store.joinEvent(eventId, userSession.session.user.id);
-  toast.success("Evènement quitté", {
+  toast.success("Evènement rejoint", {
     autoClose: 5000,
   });
 };
