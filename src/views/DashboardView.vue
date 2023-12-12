@@ -14,6 +14,11 @@
             <input type="date" v-model="event.date" class="mb-4 p-2 border border-gray-300 block w-1/2 bg-green-500" />
             <textarea v-model="event.description"
               class="mb-4 p-2 border border-gray-300 block w-1/2 h-60 bg-fuchsia-600" />
+              <h3>Feedbacks :</h3>
+              <ul v-if="event.comments && event.comments.length">
+        <li v-for="comment in event.comments" :key="comment.id">-{{ comment.commentaire }}</li>
+      </ul>
+      <p v-else>Aucun commentaire.</p>
             <button class="bg-red-500 rounded-sm p-4" @click="togglePopup(event.event_id)">Quitter</button>
             <button class="bg-green-600 rounded-sm p-4 ml-32" @click="updateEvent(event)">Sauvegarder</button>
           </div>
@@ -49,6 +54,7 @@
             <td><button @click="deleteEvent(event.event_id)">Supprimer</button></td>
             <!-- {{ event }} -->
           </tr>
+          
         </tbody>
       </table>
     </div>
@@ -95,6 +101,19 @@ const displayMyEvent = async () => {
   myEvents.value = dataEvent.events;
   const eventList = myEvents.value.filter(event => event.organisateur_id === userId);
   myEvents.value = eventList;
+
+ for (const event of myEvents.value) {
+    const { data, error } = await supabase
+      .from("feedbacks")
+      .select("commentaire")
+      .eq("event_id", event.event_id);
+
+    if (error) {
+      console.error("Erreur lors de la récupération des commentaires depuis Supabase:", error);
+    } else {
+      event.comments = data;
+    }
+  }
 };
 
 const deleteEvent = async (id) => {
