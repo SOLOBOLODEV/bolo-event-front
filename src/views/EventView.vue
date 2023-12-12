@@ -12,10 +12,15 @@
             <p>type : {{ event.type_evenement }}</p>
             <p>{{ event.description }}</p>
             <p>a {{ event.lieu }} le {{ event.date }}</p>
-            <input v-model="feedbackText" type="text" placeholder="Feedback" class="h-15 mt-3" /> <!-- Utilisation de mt-4 pour ajouter un espacement en haut -->
-            <button @click="submitFeedback" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Envoyer le Feedback</button>
-            <button @click="join(eventId)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
-            <button @click="togglePopup" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
+            <input v-model="feedbackText" type="text" placeholder="Feedback" class="h-15 mt-3" />
+            <!-- Utilisation de mt-4 pour ajouter un espacement en haut -->
+            <button @click="submitFeedback"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Envoyer le
+              Feedback</button>
+            <button @click="join(eventId)"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
+            <button @click="togglePopup"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
 
           </div>
         </div>
@@ -58,6 +63,8 @@ import { useDataEventStore } from "../stores/dataEvent";
 import { supabase } from "../utils/supabase";
 import { ref } from "vue";
 import { userSessionStore } from "../stores/userSession";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const store = useDataEventStore();
 
@@ -69,6 +76,9 @@ const userSession = userSessionStore();
 
 const join = async (eventId) => {
   store.joinEvent(eventId, userSession.session.user.id);
+  toast.success("Evènement quitté", {
+    autoClose: 5000,
+  });
 };
 
 const submitFeedback = async () => {
@@ -82,7 +92,6 @@ const submitFeedback = async () => {
         user_id: userSession.session.user.id,
       },
     ]);
-      console.log(data);
     if (error) {
       console.error("Erreur lors de l'envoi du feedback:", error);
     } else {
