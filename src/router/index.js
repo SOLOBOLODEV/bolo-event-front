@@ -59,7 +59,7 @@ router.beforeEach((to, from, next) => {
       return next("/");
     }
   }
-  return next();
+  return next("/dashboard");
 });
 
 export default router;
