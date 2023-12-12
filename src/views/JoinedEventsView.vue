@@ -56,7 +56,7 @@
             <td class="px-6 py-4 text-gray-800">{{ event.date != null ? event.date : "non précisé" }}</td>
             <td class="px-6 py-4 text-gray-800">{{ event.type_evenement != null ? event.type_evenement : "non précisé" }}
             </td>
-            <td><button @click="togglePopup(event.event_id)">caca</button></td>
+            <td><button @click="togglePopup(event.event_id)">voir plus</button></td>
             <!-- {{ event }} -->
           </tr>
         </tbody>

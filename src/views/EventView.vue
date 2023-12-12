@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Events</h1>
     <div
       style="display: flex; align-items: center; justify-content: center; z-index: 200; bottom: 0; position: absolute; width: 100%; height: 100%; background-color: hsla(0, 0%, 50%, 25%); backdrop-filter: blur(1px);"
       v-if="showPopup">
@@ -48,7 +47,7 @@
             <td class="px-6 py-4 text-gray-800">{{ event.date != null ? event.date : "non précisé" }}</td>
             <td class="px-6 py-4 text-gray-800">{{ event.type_evenement != null ? event.type_evenement : "non précisé" }}
             </td>
-            <td><button @click="togglePopup(event.event_id)">caca</button></td>
+            <td><button @click="togglePopup(event.event_id)">voir plus</button></td>
             <!-- {{ event }} -->
           </tr>
         </tbody>
@@ -76,7 +75,7 @@ const userSession = userSessionStore();
 
 const join = async (eventId) => {
   store.joinEvent(eventId, userSession.session.user.id);
-  toast.success("Evènement quitté", {
+  toast.success("Evènement rejoint", {
     autoClose: 5000,
   });
 };

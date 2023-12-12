@@ -54,7 +54,6 @@ export const useDataEventStore = defineStore({
         .delete()
         .eq("user_id", userId)
         .eq("event_id", eventId);
-        console.log("caca");
       }
       catch (error) {
         console.error(error);
@@ -96,7 +95,6 @@ export const useDataEventStore = defineStore({
         .delete()
         .eq("organisateur_id", uID)
         .eq("event_id", id);
-        console.log("caca");
       }
       catch (error) {
         console.error(error);
@@ -105,7 +103,6 @@ export const useDataEventStore = defineStore({
 
     async updateEvent(arg, uId) {
       try {
-        console.log("caca", arg);
         console.log(uId);
         await supabase.from("evenements")
         .update({
