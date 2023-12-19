@@ -20,7 +20,11 @@
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
             <button @click="togglePopup"
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
-
+           <h3>Mes Feedbacks :</h3>
+           <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
+            <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
+            <button @click="editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
+            </div>
           </div>
         </div>
       </div>
@@ -72,6 +76,8 @@ const showPopup = ref(false);
 const eventId = ref("");
 const feedbackText = ref("");
 const userSession = userSessionStore();
+const feedbacks = ref([]);
+
 
 const join = async (eventId) => {
   store.joinEvent(eventId, userSession.session.user.id);
@@ -80,10 +86,41 @@ const join = async (eventId) => {
   });
 };
 
+const loadFeedbacks = async () => {
+  const { data, error } = await supabase
+    .from("feedbacks")
+    .select("*")
+    .eq("event_id", eventId.value)
+    .eq("user_id", userSession.session.user.id)
+    .order("feedback_id", { ascending: false });
+  if (error) {
+    console.error("Erreur lors du chargement des feedbacks:", error);
+  } else {
+    feedbacks.value = data;
+  }
+  console.log(feedbacks.value);
+};
+
+const editFeedback = async (feedbackId, currentCommentaire) => {
+  console.log(feedbackId, currentCommentaire);
+  if (currentCommentaire !== null) {
+    const { data, error } = await supabase
+      .from("feedbacks")
+      .update({ commentaire: currentCommentaire })
+      .eq("feedback_id", feedbackId);
+
+    if (error) {
+      console.error("Erreur lors de la modification du feedback:", error);
+    } else {
+      console.log("Feedback modifié avec succès !");
+      feedbackText.value = "";
+      loadFeedbacks();
+    }
+  }
+};
+
 const submitFeedback = async () => {
-  // Vérifier si le contenu du feedback n'est pas vide
   if (feedbackText.value.trim() !== "") {
-    // Envoyer le contenu du feedback à la table "feedback"
     const { data, error } = await supabase.from("feedbacks").upsert([
       {
         event_id: eventId.value,
@@ -95,10 +132,10 @@ const submitFeedback = async () => {
       console.error("Erreur lors de l'envoi du feedback:", error);
     } else {
       console.log("Feedback envoyé avec succès !");
-      // Réinitialiser le contenu de l'input après l'envoi
       feedbackText.value = "";
     }
   }
+  loadFeedbacks();
 };
 
 const columns = [
@@ -111,13 +148,13 @@ const columns = [
 const togglePopup = (toggledEventId) => {
   showPopup.value = !showPopup.value;
   eventId.value = toggledEventId;
+  loadFeedbacks();
 };
 
 const syncEvent = async () => {
   await store.loadEventData();
   evenements.value = store.events;
 };
-
 //Display table on load
 syncEvent();
 
