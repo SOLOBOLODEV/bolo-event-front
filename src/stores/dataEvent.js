@@ -4,7 +4,8 @@ import { supabase } from "../utils/supabase";
 export const useDataEventStore = defineStore({
   id: "dataEvent",
   state:() => ({
-    events: null
+    events: null,
+    participateurCount: 0,
   }),
 
   actions: {
@@ -33,18 +34,14 @@ export const useDataEventStore = defineStore({
     },
 
     async joinEvent(eventId, userId) {
-      console.log(eventId);
       const { data, error } = await supabase.from("participation").upsert([
           {
             event_id: eventId,
             user_id: userId
           },
         ]);
-        console.log("data ; ", data, "\nError : ", error);
         if (error) {
           console.error("Erreur lors de la partitipation a l'event:", error);
-        } else {
-          console.log("Event rejoin avec succès !");
         }
     },
 
@@ -71,6 +68,18 @@ export const useDataEventStore = defineStore({
       }
     },
     
+    async loadEventParticipationCount(event_id) {
+      try {
+        const { data, error } = await supabase
+          .from('participation')
+          .select('*')
+          .eq('event_id', event_id.value)
+        this.participateurCount = data; 
+      } catch(error) {
+        console.error(error);
+      }
+    },
+
     async createEvent(arg, id) {
       try {
         await supabase.from("evenements").insert(
@@ -103,7 +112,6 @@ export const useDataEventStore = defineStore({
 
     async updateEvent(arg, uId) {
       try {
-        console.log(uId);
         await supabase.from("evenements")
         .update({
           titre: arg.titre,
@@ -118,7 +126,6 @@ export const useDataEventStore = defineStore({
       catch(error) {
         console.error(error);
       }
-    }
-
+    }    
   }
 });

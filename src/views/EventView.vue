@@ -11,6 +11,7 @@
             <p>type : {{ event.type_evenement }}</p>
             <p>{{ event.description }}</p>
             <p>a {{ event.lieu }} le {{ event.date }}</p>
+            <p>participants : {{ eventParticipationCount }}</p>
             <input v-model="feedbackText" type="text" placeholder="Feedback" class="h-15 mt-3" />
             <!-- Utilisation de mt-4 pour ajouter un espacement en haut -->
             <button @click="submitFeedback"
@@ -18,7 +19,7 @@
               Feedback</button>
             <button @click="join(eventId)"
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
-            <button @click="togglePopup"
+            <button @click="togglePopup(eventId)"
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
            <h3>Mes Feedbacks :</h3>
            <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
@@ -71,6 +72,7 @@ import "vue3-toastify/dist/index.css";
 
 const store = useDataEventStore();
 
+const eventParticipationCount = ref(0);
 const evenements = ref([]);
 const showPopup = ref(false);
 const eventId = ref("");
@@ -98,11 +100,9 @@ const loadFeedbacks = async () => {
   } else {
     feedbacks.value = data;
   }
-  console.log(feedbacks.value);
 };
 
 const editFeedback = async (feedbackId, currentCommentaire) => {
-  console.log(feedbackId, currentCommentaire);
   if (currentCommentaire !== null) {
     const { data, error } = await supabase
       .from("feedbacks")
@@ -112,11 +112,15 @@ const editFeedback = async (feedbackId, currentCommentaire) => {
     if (error) {
       console.error("Erreur lors de la modification du feedback:", error);
     } else {
-      console.log("Feedback modifié avec succès !");
       feedbackText.value = "";
       loadFeedbacks();
     }
   }
+};
+
+const updateParticipationCount = async (eventId) => {
+  await store.loadEventParticipationCount(eventId);
+  eventParticipationCount.value = store.participateurCount.length;
 };
 
 const submitFeedback = async () => {
@@ -130,9 +134,6 @@ const submitFeedback = async () => {
     ]);
     if (error) {
       console.error("Erreur lors de l'envoi du feedback:", error);
-    } else {
-      console.log("Feedback envoyé avec succès !");
-      feedbackText.value = "";
     }
   }
   loadFeedbacks();
@@ -145,9 +146,10 @@ const columns = [
   { name: "type_evenement", label: "Type" }
 ];
 
-const togglePopup = (toggledEventId) => {
+const togglePopup = async (toggledEventId) => {
   showPopup.value = !showPopup.value;
   eventId.value = toggledEventId;
+  await updateParticipationCount(eventId)
   loadFeedbacks();
 };
 
