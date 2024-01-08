@@ -8,30 +8,57 @@ export const usedDataFeedbackStore = defineStore({
   }),
 
   actions: {
-    async submitFeedback(feedbackText) {
+    async loadFeedbacks(eventId , userSession) {
       try {
-        // Vérifier si le contenu du feedback n'est pas vide
-        if (feedbackText.value.trim() !== "") {
-          // Envoyer le contenu du feedback à la table "feedback"
-          const { data, error } = await supabase.from("feedbacks").upsert([
-            {
-              event_id: eventId.value,
-              commentaire: feedbackText.value,
-              user_id: userSession.session.user.id,
-            },
-          ]);
-            console.log(data);
-          if (error) {
-            console.error("Erreur lors de l'envoi du feedback:", error);
-          } else {
-            console.log("Feedback envoyé avec succès !");
-            // Réinitialiser le contenu de l'input après l'envoi
-            feedbackText.value = "";
-          }
-        }       
-      } catch(error) {
-        
+      const { data, error } = await supabase
+        .from("feedbacks")
+        .select("*")
+        .eq("event_id", eventId)
+        .eq("user_id", userSession)
+        .order("feedback_id", { ascending: false });
+        console.log(data)
+      this.feedback = data;
+      } catch (error){
+        console.error(error)
       }
-    }
+    },
+
+
+    async editFeedback(feedbackId, currentCommentaire) {
+      console.log(feedbackId, currentCommentaire);
+      if (currentCommentaire !== null) {
+        const { data, error } = await supabase
+          .from("feedbacks")
+          .update({ commentaire: currentCommentaire })
+          .eq("feedback_id", feedbackId);
+    
+        if (error) {
+          console.error("Erreur lors de la modification du feedback:", error);
+        } else {
+          console.log("Feedback modifié avec succès !");
+          feedbackText.value = "";
+          loadFeedbacks();
+        }
+      }
+    },
+    
+    async submitFeedback(){
+      if (feedbackText.value.trim() !== "") {
+        const { data, error } = await supabase.from("feedbacks").upsert([
+          {
+            event_id: eventId.value,
+            commentaire: feedbackText.value,
+            user_id: userSession.session.user.id,
+          },
+        ]);
+        if (error) {
+          console.error("Erreur lors de l'envoi du feedback:", error);
+        } else {
+          console.log("Feedback envoyé avec succès !");
+          feedbackText.value = "";
+        }
+      }
+      loadFeedbacks();
+    },
   } 
 });
