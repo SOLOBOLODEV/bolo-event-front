@@ -1,37 +1,27 @@
 import { defineStore } from "pinia";
 import { supabase } from "../utils/supabase";
 
-export const usedDataFeedbackStore = defineStore({
+export const useDataFeedbackStore = defineStore({
   id: "dataFeedback",
   state: () => ({
-    feedback: null
+    feedback: []
   }),
-
   actions: {
-    async submitFeedback(feedbackText) {
+    async loadFeedbacks (userId, eventId) {
       try {
-        // Vérifier si le contenu du feedback n'est pas vide
-        if (feedbackText.value.trim() !== "") {
-          // Envoyer le contenu du feedback à la table "feedback"
-          const { data, error } = await supabase.from("feedbacks").upsert([
-            {
-              event_id: eventId.value,
-              commentaire: feedbackText.value,
-              user_id: userSession.session.user.id,
-            },
-          ]);
-            console.log(data);
-          if (error) {
-            console.error("Erreur lors de l'envoi du feedback:", error);
-          } else {
-            console.log("Feedback envoyé avec succès !");
-            // Réinitialiser le contenu de l'input après l'envoi
-            feedbackText.value = "";
-          }
-        }       
-      } catch(error) {
-        
+        console.log("salut", userId, eventId);
+        const { data, error } = await supabase
+          .from("feedbacks")
+          .select("*")
+          .eq("event_id", eventId)
+          .eq("user_id", userId)
+          .order("feedback_id", { ascending: false });
+          console.log(data);
+          this.feedback = data;
+          console.log(this.feedback);
+      } catch (error) {
+        console.error(error);
       }
     }
-  } 
+  }
 });
