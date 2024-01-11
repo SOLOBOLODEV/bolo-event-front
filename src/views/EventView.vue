@@ -24,7 +24,7 @@
             <h3>Mes Feedbacks :</h3>
             <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
               <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
-              <button @click="editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
+              <button @click="dataFeedback.editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
             </div>
           </div>
         </div>
@@ -88,25 +88,6 @@ const join = async (eventId) => {
   toast.success("Evènement rejoint", {
     autoClose: 5000,
   });
-};
-
-
-
-
-const editFeedback = async (feedbackId, currentCommentaire) => {
-  if (currentCommentaire !== null) {
-    const { data, error } = await supabase
-      .from("feedbacks")
-      .update({ commentaire: currentCommentaire })
-      .eq("feedback_id", feedbackId);
-
-    if (error) {
-      console.error("Erreur lors de la modification du feedback:", error);
-    } else {
-      feedbackText.value = "";
-      await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
-    }
-  }
 };
 
 const updateParticipationCount = async (eventId) => {

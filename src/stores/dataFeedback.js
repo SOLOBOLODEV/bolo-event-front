@@ -22,6 +22,18 @@ export const useDataFeedbackStore = defineStore({
       } catch (error) {
         console.error(error);
       }
+    },
+
+    async editFeedback (feedbackId, currentCommentaire) {
+      try {
+        const { data, error } = await supabase
+          .from("feedbacks")
+          .update({ commentaire: currentCommentaire })
+          .eq("feedback_id", feedbackId);
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 });
