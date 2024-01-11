@@ -21,10 +21,10 @@
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
             <button @click="togglePopup(eventId)"
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
-           <h3>Mes Feedbacks :</h3>
-           <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
-            <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
-            <button @click="editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
+            <h3>Mes Feedbacks :</h3>
+            <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
+              <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
+              <button @click="dataFeedback.editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
             </div>
           </div>
         </div>
@@ -67,6 +67,7 @@ import { useDataEventStore } from "../stores/dataEvent";
 import { supabase } from "../utils/supabase";
 import { ref } from "vue";
 import { userSessionStore } from "../stores/userSession";
+import { useDataFeedbackStore } from "../stores/dataFeedback";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
@@ -78,6 +79,7 @@ const showPopup = ref(false);
 const eventId = ref("");
 const feedbackText = ref("");
 const userSession = userSessionStore();
+const dataFeedback = useDataFeedbackStore();
 const feedbacks = ref([]);
 
 
@@ -86,36 +88,6 @@ const join = async (eventId) => {
   toast.success("Evènement rejoint", {
     autoClose: 5000,
   });
-};
-
-const loadFeedbacks = async () => {
-  const { data, error } = await supabase
-    .from("feedbacks")
-    .select("*")
-    .eq("event_id", eventId.value)
-    .eq("user_id", userSession.session.user.id)
-    .order("feedback_id", { ascending: false });
-  if (error) {
-    console.error("Erreur lors du chargement des feedbacks:", error);
-  } else {
-    feedbacks.value = data;
-  }
-};
-
-const editFeedback = async (feedbackId, currentCommentaire) => {
-  if (currentCommentaire !== null) {
-    const { data, error } = await supabase
-      .from("feedbacks")
-      .update({ commentaire: currentCommentaire })
-      .eq("feedback_id", feedbackId);
-
-    if (error) {
-      console.error("Erreur lors de la modification du feedback:", error);
-    } else {
-      feedbackText.value = "";
-      loadFeedbacks();
-    }
-  }
 };
 
 const updateParticipationCount = async (eventId) => {
@@ -136,7 +108,7 @@ const submitFeedback = async () => {
       console.error("Erreur lors de l'envoi du feedback:", error);
     }
   }
-  loadFeedbacks();
+  await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
 };
 
 const columns = [
@@ -149,8 +121,10 @@ const columns = [
 const togglePopup = async (toggledEventId) => {
   showPopup.value = !showPopup.value;
   eventId.value = toggledEventId;
-  await updateParticipationCount(eventId)
-  loadFeedbacks();
+  await updateParticipationCount(eventId);
+  console.log([userSession.session.user.id, eventId.value]);
+  await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
+  feedbacks.value = dataFeedback.feedback;
 };
 
 const syncEvent = async () => {

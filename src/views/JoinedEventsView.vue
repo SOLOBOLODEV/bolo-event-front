@@ -30,6 +30,9 @@
               l'évenement</button>
             <button @click="togglePopup"
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
+            <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
+              <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
+            </div>
           </div>
         </div>
       </div>
@@ -72,6 +75,9 @@ import { ref } from "vue";
 import { userSessionStore } from "../stores/userSession";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import { useDataFeedbackStore } from "../stores/dataFeedback";
+
+
 
 
 const store = useDataEventStore();
@@ -81,7 +87,8 @@ const showPopup = ref(false);
 const eventId = ref("");
 const feedbackText = ref("");
 const userSession = userSessionStore();
-
+const dataFeedback = useDataFeedbackStore();
+const feedbacks = ref([]);
 
 
 const leave = async (eventId) => {
@@ -117,9 +124,12 @@ const columns = [
   { name: "type_evenement", label: "Type" }
 ];
 
-const togglePopup = (toggledEventId) => {
+const togglePopup =  async (toggledEventId) => {
   showPopup.value = !showPopup.value;
   eventId.value = toggledEventId;
+  await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
+  feedbacks.value = dataFeedback.feedback;
+  console.log("feedback value:" , feedbacks.value);
 };
 
 const syncEvent = async () => {
