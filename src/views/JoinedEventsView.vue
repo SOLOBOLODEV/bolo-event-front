@@ -16,7 +16,7 @@
         style="position: relative; width: 80%; aspect-ratio: 16/9; background-color: hsl(0, 0%, 80%); border-radius: 16px; box-shadow: 5px 5px 20px hsl(0, 0%, 20%);">
         <div v-for="event in evenements" :key="event">
           <div v-if="event.event_id == eventId">
-            <h2>{{ event.titre }}</h2>
+            <h2>{{ event.titre }} </h2>
             <p>type : {{ event.type_evenement }}</p>
             <p>{{ event.description }}</p>
             <p>a {{ event.lieu }} le {{ event.date }}</p>

@@ -7,21 +7,26 @@
         style="position: relative; width: 80%; aspect-ratio: 16/9; background-color: hsl(0, 0%, 80%); border-radius: 16px; box-shadow: 5px 5px 20px hsl(0, 0%, 20%);">
         <div v-for="event in evenements" :key="event">
           <div v-if="event.event_id == eventId">
-            <h2>{{ event.titre }}</h2>
-            <p>type : {{ event.type_evenement }}</p>
-            <p>{{ event.description }}</p>
-            <p>a {{ event.lieu }} le {{ event.date }}</p>
-            <p>participants : {{ eventParticipationCount }}</p>
-            <input v-model="feedbackText" type="text" placeholder="Feedback" class="h-15 mt-3" />
+            <div class="flex justify-between item">
+              <h1 class="text-xl font-bold m-4">{{ event.titre }}</h1>
+              <button @click="togglePopup(eventId)"
+              class="m-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
+            </div>
+
+            <h2 class="m-2 text-l">Type : {{ event.type_evenement }}</h2>
+            <p class="m-2 text-base ">{{ event.description }}</p>
+            <p class="m-2 text-base">A {{ event.lieu }} Le {{ event.date }}</p>
+            <p class="m-2 text-base">Participants : {{ eventParticipationCount }}</p>
+            <input v-model="feedbackText" type="text" placeholder="Feedback" class="m-2 h-15 mt-3" />
             <!-- Utilisation de mt-4 pour ajouter un espacement en haut -->
             <button @click="submitFeedback"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Envoyer le
+              class="m-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Envoyer le
               Feedback</button>
+            <div class="flex">
             <button @click="join(eventId)"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
-            <button @click="togglePopup(eventId)"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
-            <h3>Mes Feedbacks :</h3>
+              class="m-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
+            </div>
+            <h3 class="m-2">Mes Feedbacks :</h3>
             <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
               <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
               <button @click="dataFeedback.editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
