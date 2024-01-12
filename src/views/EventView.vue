@@ -1,64 +1,89 @@
 <template>
   <div>
     <div
-      style="display: flex; align-items: center; justify-content: center; z-index: 200; bottom: 0; position: absolute; width: 100%; height: 100%; background-color: hsla(0, 0%, 50%, 25%); backdrop-filter: blur(1px);"
+      class="flex items-center justify-center absolute bottom-0 w-full h-full bg-black bg-opacity-25 backdrop-blur z-50"
       v-if="showPopup">
       <div
-        style="position: relative; width: 80%; aspect-ratio: 16/9; background-color: hsl(0, 0%, 80%); border-radius: 16px; box-shadow: 5px 5px 20px hsl(0, 0%, 20%);">
+        class="relative w-4/5 bg-gray-300 rounded-xl shadow-lg aspect-w-16 aspect-h-9"  
+      >
         <div v-for="event in evenements" :key="event">
-          <div v-if="event.event_id == eventId">
-            <h2>{{ event.titre }}</h2>
-            <p>type : {{ event.type_evenement }}</p>
-            <p>{{ event.description }}</p>
-            <p>a {{ event.lieu }} le {{ event.date }}</p>
-            <p>participants : {{ eventParticipationCount }}</p>
-            <input v-model="feedbackText" type="text" placeholder="Feedback" class="h-15 mt-3" />
-            <!-- Utilisation de mt-4 pour ajouter un espacement en haut -->
-            <button @click="submitFeedback"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Envoyer le
-              Feedback</button>
-            <button @click="join(eventId)"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Rejoindre</button>
-            <button @click="togglePopup(eventId)"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Fermer</button>
-            <h3>Mes Feedbacks :</h3>
-            <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
-              <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="dataFeedback.editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
-              <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="dataFeedback.deleteFeedback(feedback.feedback_id)">Supprimer le Feedback</button>
-            </div>
-          </div>
+          <BoloCard v-if="event.event_id === eventId" 
+            :title="event.titre"        
+            :second-title="event.type_evenement"
+            >
+            <template #header-right>
+                <button class="m-3 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4" @click="togglePopup(eventId)">
+                  <span class="mdi mdi-close"></span>
+                </button>
+            </template>
+            <template #description>
+              <p class="m-2 text-base ">{{ event.description }}</p>
+              <p class="m-2 text-base">Lieu : {{ event.lieu }} </p>
+              <p class="m-2 text-base">Date : {{ event.date }}</p>
+              <p class="m-2 text-base">Participants : {{ eventParticipationCount }}</p>
+            </template>
+            <template #detail>
+              <input v-model="feedbackText" type="text" placeholder="Feedback" class="m-2 h-9 mt-3 rounded" />
+              <button @click="submitFeedback" class="m-3 text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded mt-4">
+                <span class="mdi mdi-send"></span>
+              </button>
+              <h3 class="m-2">Mes Feedbacks :</h3>
+              <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
+                <input v-model="feedback.commentaire" type="text" class="m-2 h-9 mt-3 rounded" :disabled="!isEditing" />
+                <button @click="isEditing = !isEditing" class="text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded mt-4">  
+                  <span class="mdi" :class="isEditing ? 'mdi-close' : 'mdi-pencil'"></span>
+                </button>
+                <button 
+                  class="text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded mt-4"
+                  @click="dataFeedback.editFeedback(feedback.feedback_id, feedback.commentaire)"
+                  :disabled="!isEditing"  
+                > 
+                  <span class="mdi mdi-send"></span>
+                </button>
+                <button class="text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded" @click="dataFeedback.deleteFeedback(feedback.feedback_id)">
+                  <span class="mdi mdi-delete"></span>
+                </button>
+              </div>
+            </template>
+            <template #footer> 
+              <div class="flex justify-end ">
+                <button @click="join(eventId)" class="m-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 mr-4">
+                  Rejoindre l'event
+                </button>
+              </div>
+            </template>
+          </BoloCard>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs uppercase bg-gray-700 text-gray-400">
-          <tr>
-            <th v-for="column in columns" :key="column" scope="col" class="px-6 py-3">
-              {{ column.label }}
-            </th>
-            <th>
-              En savoir plus
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Séparer les 2 lignes en composants différents -->
-          <tr v-for="event in evenements" :key="event" class="odd:bg-gray-200 even:bg-gray-50 border-b">
-            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ event.titre != null ?
-              event.titre : "non précisé" }}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.lieu != null ? event.lieu : "non précisé" }}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.date != null ? event.date : "non précisé" }}</td>
-            <td class="px-6 py-4 text-gray-800">{{ event.type_evenement != null ? event.type_evenement : "non précisé" }}
-            </td>
-            <td><button @click="togglePopup(event.event_id)">voir plus</button></td>
-            <!-- {{ event }} -->
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-xs uppercase bg-gray-700 text-gray-400">
+        <tr>
+          <th v-for="column in columns" :key="column" scope="col" class="px-6 py-3">
+            {{ column.label }}
+          </th>
+          <th>
+            En savoir plus
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Séparer les 2 lignes en composants différents -->
+        <tr v-for="event in evenements" :key="event" class="odd:bg-gray-200 even:bg-gray-50 border-b">
+          <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ event.titre != null ?
+            event.titre : "non précisé" }}</td>
+          <td class="px-6 py-4 text-gray-800">{{ event.lieu != null ? event.lieu : "non précisé" }}</td>
+          <td class="px-6 py-4 text-gray-800">{{ event.date != null ? event.date : "non précisé" }}</td>
+          <td class="px-6 py-4 text-gray-800">{{ event.type_evenement != null ? event.type_evenement : "non précisé" }}
+          </td>
+          <td><button @click="togglePopup(event.event_id)">voir plus</button></td>
+          <!-- {{ event }} -->
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -69,6 +94,7 @@ import { supabase } from "../utils/supabase";
 import { ref } from "vue";
 import { userSessionStore } from "../stores/userSession";
 import { useDataFeedbackStore } from "../stores/dataFeedback";
+import BoloCard from "../components/card/BoloCard.vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
@@ -82,6 +108,7 @@ const feedbackText = ref("");
 const userSession = userSessionStore();
 const dataFeedback = useDataFeedbackStore();
 const feedbacks = ref([]);
+const isEditing = ref(false);
 
 
 const join = async (eventId) => {
