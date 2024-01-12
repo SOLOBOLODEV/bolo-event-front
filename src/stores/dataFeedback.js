@@ -16,7 +16,6 @@ export const useDataFeedbackStore = defineStore({
           .eq("event_id", eventId)
           .eq("user_id", userId)
           .order("feedback_id", { ascending: false });
-          console.log(data);
           this.feedback = data;
           console.log(this.feedback);
       } catch (error) {
@@ -30,7 +29,18 @@ export const useDataFeedbackStore = defineStore({
           .from("feedbacks")
           .update({ commentaire: currentCommentaire })
           .eq("feedback_id", feedbackId);
-        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async deleteFeedback (feedbackId) {
+      try {
+        const { data, error } = await supabase
+          .from("feedbacks")
+          .delete()
+          .eq("feedback_id", feedbackId);
+          
       } catch (error) {
         console.error(error);
       }

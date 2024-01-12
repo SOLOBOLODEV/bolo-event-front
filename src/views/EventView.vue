@@ -24,7 +24,8 @@
             <h3>Mes Feedbacks :</h3>
             <div v-for="feedback in feedbacks" :key="feedback.feedback_id">
               <input v-model="feedback.commentaire" type="text" class="h-15 mt-3" />
-              <button @click="dataFeedback.editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="dataFeedback.editFeedback(feedback.feedback_id, feedback.commentaire)">Modifier le Feedback</button>
+              <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="dataFeedback.deleteFeedback(feedback.feedback_id)">Supprimer le Feedback</button>
             </div>
           </div>
         </div>
