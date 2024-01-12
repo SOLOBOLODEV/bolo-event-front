@@ -37,8 +37,8 @@
               </template>
           <template #footer> 
           <div class="flex justify-end ">
-            <button @click="join(eventId)" class="m-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 mr-4">
-              Rejoindre l'event
+            <button @click="leave(eventId)" class="m-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 mr-4">
+              Quitter l'évènement
             </button>
           </div>
         </template>
@@ -97,8 +97,6 @@ const isEditing = ref(false);
 
 
 const leave = async (eventId) => {
-  // Your code here
-};
   store.leaveEvent(eventId, userSession.session.user.id);
   toast.success("Evènement quitté", {
     autoClose: 5000,
