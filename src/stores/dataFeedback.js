@@ -1,11 +1,20 @@
 import { defineStore } from "pinia";
 import { supabase } from "../utils/supabase";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+
 
 export const useDataFeedbackStore = defineStore({
   id: "dataFeedback",
   state: () => ({
     feedback: []
   }),
+  getters: {
+    getFeedbacks() {
+      return state.feedback;
+    }
+  },  
+
   actions: {
     async loadFeedbacks (userId, eventId) {
       try {
@@ -17,7 +26,6 @@ export const useDataFeedbackStore = defineStore({
           .eq("user_id", userId)
           .order("feedback_id", { ascending: false });
           this.feedback = data;
-          console.log(this.feedback);
       } catch (error) {
         console.error(error);
       }
@@ -29,7 +37,13 @@ export const useDataFeedbackStore = defineStore({
           .from("feedbacks")
           .update({ commentaire: currentCommentaire })
           .eq("feedback_id", feedbackId);
+          toast.success("Feedback édité avec succèss", {
+            autoClose: 1000
+          });
       } catch (error) {
+        toast.error("Erreur lors de l'édition des feedbacks", {
+          autoClose: 1000
+        });
         console.error(error);
       }
     },
@@ -40,8 +54,13 @@ export const useDataFeedbackStore = defineStore({
           .from("feedbacks")
           .delete()
           .eq("feedback_id", feedbackId);
-          
+          toast.success("Feedback supprimé avec succès", {
+            autoClose: 1000
+         });
       } catch (error) {
+        toast.error("Erreur lors de la suppression du feedback", {
+          autoClose: 1000
+       });
         console.error(error);
       }
     }

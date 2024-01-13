@@ -33,7 +33,7 @@
                   :disabled="!isEditing"> 
                     <span class="mdi mdi-send"></span>
                   </button>
-                <button class="text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded" @click="dataFeedback.deleteFeedback(feedback.feedback_id)">
+                <button class="text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded" @click="deleteFeedback(feedback.feedback_id)">
                   <span class="mdi mdi-delete"></span>
                 </button>
                 </div>
@@ -79,7 +79,7 @@
 <script setup>
 import { useDataEventStore } from "../stores/dataEvent";
 import { supabase } from "../utils/supabase";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { userSessionStore } from "../stores/userSession";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -95,6 +95,8 @@ const feedbackText = ref("");
 const userSession = userSessionStore();
 const dataFeedback = useDataFeedbackStore();
 const feedbacks = ref([]);
+// const feedbacks = computed(() => dataFeedback.getFeedbacks);
+
 const isEditing = ref(false);
 
 
@@ -119,11 +121,12 @@ const submitFeedback = async () => {
     if (error) {
       console.error("Erreur lors de l'envoi du feedback:", error);
     } else {
-      console.log("Feedback envoyé avec succès !");
       feedbackText.value = "";
     }
   }
 };
+
+
 
 const columns = [
   { name: "titre", label: "Titre" },
@@ -137,7 +140,13 @@ const togglePopup =  async (toggledEventId) => {
   eventId.value = toggledEventId;
   await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
   feedbacks.value = dataFeedback.feedback;
-  console.log("feedback value:" , feedbacks.value);
+};
+
+
+const deleteFeedback = async (id) => {
+  await dataFeedback.deleteFeedback(id);
+  await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
+  feedbacks.value = dataFeedback.feedback;
 };
 
 const syncEvent = async () => {
@@ -147,18 +156,13 @@ const syncEvent = async () => {
     const eventId = store.events[event]["event_id"];
     eventIds.push(eventId);
   };
-  console.log(eventIds);
 
   for (let eventId in eventIds) {
     eventId = eventIds[eventId];
-    console.log(eventId);
     await store.getEvent(eventId);
     evenements.value.push(store.events[0]);
-    console.log(store.events[0]);
   }
 };
-
-// { "event_id": 1, "titre": "Rocket league tournoi", "description": "Tournoi Rocket league ", "date": "2023-05-20", "lieu": "Paris", "type_evenement": "tournoi", "organisateur_id": null }
 
 //Display table on load
 syncEvent();
