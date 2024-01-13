@@ -40,7 +40,7 @@
                 > 
                   <span class="mdi mdi-send"></span>
                 </button>
-                <button class="text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded" @click="dataFeedback.deleteFeedback(feedback.feedback_id)">
+                <button class="text-slate-500 hover:text-slate-700 font-bold py-2 px-4 rounded" @click="deleteFeedback(feedback.feedback_id)">
                   <span class="mdi mdi-delete"></span>
                 </button>
               </div>
@@ -151,6 +151,12 @@ const togglePopup = async (toggledEventId) => {
   eventId.value = toggledEventId;
   await updateParticipationCount(eventId);
   console.log([userSession.session.user.id, eventId.value]);
+  await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
+  feedbacks.value = dataFeedback.feedback;
+};
+
+const deleteFeedback = async (id) => {
+  await dataFeedback.deleteFeedback(id);
   await dataFeedback.loadFeedbacks(userSession.session.user.id, eventId.value);
   feedbacks.value = dataFeedback.feedback;
 };
